@@ -31,6 +31,7 @@ IN THE SOFTWARE.
 #include <complex>
 #include <cassert>
 #include "constants.h"
+#include "cryptominisat_ipasir.h"
 
 using std::vector;
 using namespace CMSat;
@@ -69,6 +70,15 @@ DLL_PUBLIC void * ipasir_init ()
 {
     MySolver *s = new MySolver;
     return (void*)s;
+}
+
+/**
+ * Extract the underlying SATSolver instance from the ipasir solver.
+ */
+DLL_PUBLIC SATSolver * get_real_solver (void * solver)
+{
+    MySolver* s = (MySolver*)solver;
+    return s->solver;
 }
 
 /**
