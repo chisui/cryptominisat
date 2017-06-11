@@ -1,0 +1,19 @@
+#pragma once
+
+#ifdef __cplusplus
+    #define NOEXCEPT noexcept
+
+    namespace CMSat{ struct SATSolver; }
+    using CMSat::SATSolver;
+
+    extern "C" {
+#endif
+
+/**
+ * Extract the underlying SATSolver instance from the ipasir solver.
+ */
+CMS_DLL_PUBLIC void * get_real_solver (void * solver) NOEXCEPT;
+
+#ifdef __cplusplus
+} // end extern c
+#endif
