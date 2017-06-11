@@ -1,11 +1,6 @@
 #pragma once
 
 #ifdef __cplusplus
-    #define NOEXCEPT noexcept
-
-    namespace CMSat{ struct SATSolver; }
-    using CMSat::SATSolver;
-
     extern "C" {
 #endif
 
