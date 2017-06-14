@@ -280,7 +280,7 @@ if (NOT WIN32)
     #add_cxx_flag_if_supported("-fno-exceptions")
 endif()
 
-option(IPASIR "Also build IPASIR" OFF)
+option(IPASIR "Also build IPASIR" ON)
 
 option(LIMITMEM "*Only used for testing*. Limit memory used by CMS through number of variables" OFF)
 if (LIMITMEM)
@@ -474,10 +474,6 @@ endmacro()
 # -----------------------------------------------------------------------------
 option(ENABLE_PYTHON_INTERFACE "Enable Python interface" ON)
 
-if (STATICCOMPILE)
-    set(ENABLE_PYTHON_INTERFACE OFF)
-endif()
-
 find_package (PythonInterp)
 # Force the use of the python libraries corresponding to the version of the current interpreter
 if (PYTHON_VERSION_MAJOR EQUAL "2")
@@ -497,7 +493,7 @@ else()
     message(WARNING "Cannot find python interpreter, libs and header files, cannot build python interface")
 endif()
 
-if (ENABLE_PYTHON_INTERFACE AND PYTHON_OK AND NOT STATICCOMPILE)
+if (ENABLE_PYTHON_INTERFACE AND PYTHON_OK)
     message(STATUS "Building python interface")
     add_subdirectory(python pycryptosat)
 endif()
@@ -575,7 +571,13 @@ set(MY_TARGETS libcryptominisat5 cryptominisat5_simple)
 if (NOT ONLY_SIMPLE)
     set(MY_TARGETS ${MY_TARGETS} cryptominisat5)
 endif()
-export(TARGETS ${MY_TARGETS} FILE "${CMAKE_CURRENT_BINARY_DIR}/${CRYPTOMINISAT5_TARGETS_FILENAME}")
+if (IPASIR)
+    set(MY_TARGETS ${MY_TARGETS} ipasircryptominisat5)
+endif()
+export(
+    TARGETS ${MY_TARGETS}
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/${CRYPTOMINISAT5_TARGETS_FILENAME}"
+)
 
 # Create cryptominisat5Config file
 set(EXPORT_TYPE "Build-tree")
@@ -600,7 +602,7 @@ install(FILES
 )
 
 # Install the export set for use with the install-tree
-install(EXPORT ${CRYPTOMINISAT5_EXPORT_NAME} DESTINATION
-    "${CRYPTOMINISAT5_INSTALL_CMAKE_DIR}"
+install(
+    EXPORT ${CRYPTOMINISAT5_EXPORT_NAME}
+    DESTINATION "${CRYPTOMINISAT5_INSTALL_CMAKE_DIR}"
 )
-
