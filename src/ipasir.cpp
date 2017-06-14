@@ -188,7 +188,18 @@ DLL_PUBLIC int ipasir_val (void * solver, int lit)
     const int a = std::abs(lit)-1;
     const bool flip = lit < 0;
 
-    return (s->solver->get_model()[a] == l_True) ^ flip;
+    lbool v = s->solver->get_model()[a];
+    if (v == l_True) {
+        return lit;
+    }
+    if (v == l_False) {
+        return -lit;
+    }
+    if (v == l_Undef) {
+        return 0;
+    }
+    assert(false);
+    exit(-1);
 }
 
 /**
